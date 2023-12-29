@@ -3,7 +3,6 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-// import css-loader from 'css-loader '; только в typescript
 
 const form = document.querySelector('.form');
 const input = document.querySelector('#input');
@@ -42,11 +41,11 @@ form.addEventListener('submit', event => {
           message:
             'Sorry, there are no images matching your search query. Please try again!',
           theme: 'dark',
-          //   messageColor: '#FAFAFB',
           backgroundColor: '#EF4040',
           titleColor: 'white',
           position: 'topRight',
         });
+        return;
       }
       const imgs = data.hits.reduce(
         (
@@ -91,10 +90,12 @@ form.addEventListener('submit', event => {
       modal.refresh();
     })
     .catch(error => {
+      loader.style.display = 'none';
       iziToast.error({
         message: error.message,
         color: 'red',
         position: 'topCenter',
       });
+      console.error('Error fetching data:', error);
     });
 });

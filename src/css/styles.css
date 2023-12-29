@@ -162,16 +162,16 @@ span {
 <ul class="gallery"></ul>
 </div> */
 .loader {
-  width: 256px;
-  height: 24px;
+  width: 64px;
+  height: 64px;
   border: 3px solid #140707;
   border-radius: 50%;
   display: block;
   position: relative;
   top: 0%;
-  left: 50%;
+  /* left: 50%; */
   box-sizing: border-box;
-  animation: rotation 1s linear infinite;
+  animation: brandRotation 1s linear infinite;
 }
 
 .loader::after {
@@ -185,4 +185,13 @@ span {
   height: 16px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
+}
+@keyframes brandRotation {
+  0% {
+    transform: rotate(0deg)
+  }
+
+  100% {
+    transform: rotate(360deg)
+  }
 }
