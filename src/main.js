@@ -7,17 +7,29 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const form = document.querySelector('.form');
 const input = document.querySelector('#input');
+const gallery = document.querySelector('.gallery');
+const loader = document.querySelector('.loader');
+loader.style.display = 'none';
 
 form.addEventListener('submit', event => {
   event.preventDefault();
   const query = input.value.trim();
-
-  let url = `https://pixabay.com/api/?key=41494285-2be0c6d487dc7750955372a82&q=${query}&image_type=photo&orientation=horizontal&safesearch=true`;
-  const gallery = document.querySelector('.gallery');
   gallery.innerHTML = ''; // Очищення
+  input.value = '';
+  loader.style.display = 'block';
 
-  fetch(url)
+  // object iterator
+  const searchParams = new URLSearchParams({
+    key: '41494285-2be0c6d487dc7750955372a82',
+    q: query,
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: 'true',
+  });
+
+  fetch(`https://pixabay.com/api/?${searchParams}`)
     .then(response => {
+      loader.style.display = 'none';
       if (!response.ok) {
         throw new Error(response.status);
       }
@@ -29,9 +41,11 @@ form.addEventListener('submit', event => {
         throw iziToast.show({
           message:
             'Sorry, there are no images matching your search query. Please try again!',
-          color: 'red',
-          position: 'topCenter',
-          //   close: false,
+          theme: 'dark',
+          //   messageColor: '#FAFAFB',
+          backgroundColor: '#EF4040',
+          titleColor: 'white',
+          position: 'topRight',
         });
       }
       const imgs = data.hits.reduce(
@@ -54,11 +68,13 @@ form.addEventListener('submit', event => {
            src="${webformatURL}"
            alt="${tags}"
            />
-          </a>
-          <p>Likes:${likes}</p>
-          <p>Views:${views}</p>
-          <p>Comments:${comments}</p>
-          <p>Downloads:${downloads}</p>
+          </a>          
+          <div class="description">
+          <p>Likes:<span>${likes}</span></p>
+          <p>Views:<span>${views}</span></p>
+          <p>Comments:<span>${comments}</span></p>
+          <p>Downloads:<span>${downloads}</span></p>
+          </div> 
         </li>`,
         ''
       );
@@ -71,7 +87,8 @@ form.addEventListener('submit', event => {
         captionDelay: 250,
         captionsData: 'alt',
       });
-      modal.open();
+
+      modal.refresh();
     })
     .catch(error => {
       iziToast.error({
