@@ -10,6 +10,12 @@ const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
 loader.style.display = 'none';
 
+// Оголошення modal поза межами блока обробника подій
+let modal = new simpleLightbox('ul.gallery a', {
+  captionDelay: 250,
+  captionsData: 'alt',
+});
+
 form.addEventListener('submit', event => {
   event.preventDefault();
   const query = input.value.trim();
@@ -23,7 +29,7 @@ form.addEventListener('submit', event => {
     q: query,
     image_type: 'photo',
     orientation: 'horizontal',
-    safesearch: 'true',
+    safesearch: true, //Параметр safesearch повинен бути наданий як логічний тип (без лапок), а не як рядок при побудові searchParams
   });
 
   fetch(`https://pixabay.com/api/?${searchParams}`)
@@ -45,7 +51,8 @@ form.addEventListener('submit', event => {
           titleColor: 'white',
           position: 'topRight',
         });
-        return;
+        // Є зайвий оператор повернення {return) після виклику iziToast.show() в розділі обробки помилок всередині блоку .then, оскільки виключення не можуть бути повернені.
+        // return;
       }
       const imgs = data.hits.reduce(
         (
@@ -79,15 +86,15 @@ form.addEventListener('submit', event => {
       );
 
       // add murkup to DOM
-      gallery.innerHTML = imgs;
 
-      //init SimpleLightbox
-      let modal = new simpleLightbox('ul.gallery a', {
-        captionDelay: 250,
-        captionsData: 'alt',
-      });
+      // не следует использовать innerHTML
+      // Выставление свойства innerHTML уничтожит все текущие вложенные HTML-элементы со всеми обработчиками событий, что может вызвать утечки памяти в некоторых браузерах.
+      // gallery.innerHTML = imgs;
 
-      modal.refresh();
+      // використання gallery.insertAdjacentHTML для поліпшення продуктивності при вставці великих HTML-рядків. Наприклад: gallery.insertAdjacentHTML('beforeend', imgs);.
+      gallery.insertAdjacentHTML('beforeend', imgs);
+
+      modal.refresh(); // виклик методу refresh() бібліотеки SimpleLightbox  - оновлення екземпляра SimpleLightbox кожного разу після додавання нових зображень
     })
     .catch(error => {
       loader.style.display = 'none';
