@@ -76,10 +76,10 @@ form.addEventListener('submit', event => {
            />
           </a>          
           <div class="description">
-          <p>Likes:<span>${likes}</span></p>
-          <p>Views:<span>${views}</span></p>
-          <p>Comments:<span>${comments}</span></p>
-          <p>Downloads:<span>${downloads}</span></p>
+          <p><b>Likes:</b><span>${likes}</span></p>
+          <p><b>Views:</b><span>${views}</span></p>
+          <p><b>Comments:</b><span>${comments}</span></p>
+          <p><b>Downloads:</b><span>${downloads}</span></p>
           </div> 
         </li>`,
         ''
